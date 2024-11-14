@@ -25,10 +25,11 @@ type XmlCommand struct {
 }
 
 type XmlItem struct {
-	Name       string `yaml:"name"`
-	XQuery     string `yaml:"xQuery"`
-	XQueryExpr *xpath.Expr
-	Type       Type `yaml:"type"`
+	Name        string `yaml:"name"`
+	Description string `yaml:"description"`
+	XQuery      string `yaml:"xQuery"`
+	XQueryExpr  *xpath.Expr
+	Type        Type `yaml:"type"`
 }
 
 type Client interface {

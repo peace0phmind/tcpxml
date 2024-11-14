@@ -13,7 +13,7 @@ import (
 )
 
 func TestClient_ReadCNC(t *testing.T) {
-	data, err := os.ReadFile("cmd_cnc.yaml")
+	data, err := os.ReadFile("han_cnc.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -57,7 +57,7 @@ func TestClient_ReadCNC(t *testing.T) {
 }
 
 func TestClient_ReadPLC(t *testing.T) {
-	data, err := os.ReadFile("cmd_plc.yaml")
+	data, err := os.ReadFile("han_plc.yaml")
 	if err != nil {
 		panic(err)
 	}
@@ -131,7 +131,7 @@ func TestClient_XPath(t *testing.T) {
 }
 
 func TestClient_DoLine(t *testing.T) {
-	data, err := os.ReadFile("cmd_cnc.yaml")
+	data, err := os.ReadFile("han_cnc.yaml")
 	if err != nil {
 		panic(err)
 	}
