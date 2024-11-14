@@ -122,8 +122,12 @@ func TestClient_XPath(t *testing.T) {
 	doXmlEval(t, "<axes><auto>yes</auto><ax1>0</ax1><ax2>0</ax2><ax3>0</ax3><ax4>14</ax4><ax5>14</ax5><ax6>0</ax6><ax7>0</ax7><sub>vel</sub></axes>", "number(/axes/ax1/text())", 0.0)
 	doXmlEval(t, "<axes><auto>yes</auto><ax1>0</ax1><ax2>0</ax2><ax3>0</ax3><ax4>14</ax4><ax5>14</ax5><ax6>0</ax6><ax7>0</ax7><sub>vel</sub></axes>", "number(/axes/ax8/text())", math.NaN())
 
+	doXmlEval(t, "<alarm><auto>yes</auto><no>0</no><prio>255</prio><st>plc</st></alarm>", "count(/alarm) > 0 and number(/alarm/no/text()) > 0", false)
 	doXmlEval(t, "<alarm><auto>yes</auto><no>821</no><prio>5</prio><st>nc1</st><v1>C:/PAData/NCProg\\1Flower.nc</v1><v2>C:/PAData/NCProg\\1Flower.nc</v2></alarm>", "count(/alarm) > 0 and number(/alarm/no/text()) > 0", true)
 	doXmlEval(t, "<alarm><auto>yes</auto><no>821</no><prio>5</prio><st>nc1</st><v1>C:/PAData/NCProg\\1Flower.nc</v1><v2>C:/PAData/NCProg\\1Flower.nc</v2></alarm>", "string-join(/alarm/*[starts-with(name(), 'v')]/text(), ';')", "C:/PAData/NCProg\\1Flower.nc;C:/PAData/NCProg\\1Flower.nc")
+
+	//doXmlEval(t, "<get><.P085>80</.P085><auto>yes</auto></get>", "count(/get) > 0", true)
+	//doXmlEval(t, "<get><.P085>80</.P085><auto>yes</auto></get>", "", "")
 }
 
 func TestClient_DoLine(t *testing.T) {

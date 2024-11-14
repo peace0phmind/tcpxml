@@ -5,20 +5,22 @@ import (
 	"fmt"
 	"github.com/antchfx/xmlquery"
 	"github.com/antchfx/xpath"
+	"github.com/expgo/factory"
+	"github.com/expgo/log"
 	"math"
 	"strings"
 )
 
 type client struct {
+	log.InnerLog
 	transporter Transporter
 	cmdMap      map[string]XmlCommand
 }
 
 func NewClient(transporter Transporter, commands []XmlCommand) (Client, error) {
-	c := &client{
-		transporter: transporter,
-		cmdMap:      make(map[string]XmlCommand),
-	}
+	c := factory.New[client]()
+	c.transporter = transporter
+	c.cmdMap = make(map[string]XmlCommand)
 
 	for _, cmd := range commands {
 		if _, ok := c.cmdMap[cmd.Name]; ok {
@@ -101,5 +103,6 @@ func (c *client) doLine(line string) (map[string]any, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("")
+	c.L.Infof("count't parse line: %s", line)
+	return nil, nil
 }

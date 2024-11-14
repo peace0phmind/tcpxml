@@ -140,7 +140,7 @@
 - name: "alarm"
   description: "报警信息"
   requestFormat: "<alarm><auto>yes</auto></alarm>\n"
-  responseIf: "count(/alarm) > 0"
+  responseIf: "count(/alarm) > 0 and number(/alarm/no/text()) > 0"
   items:
     - name: "alarm_no"
       xQuery: "number(/alarm/no/text())"
