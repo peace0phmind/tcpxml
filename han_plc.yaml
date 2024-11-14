@@ -1,36 +1,65 @@
 - name: "P084"
   description: "板材长度"
   requestFormat: "<get><var>.P084</var><auto>yes</auto></get>\n"
-  responseIf: ""
-  
+  responseIf: "count(/get/_P084) > 0"
+  items:
+    - name: "P084"
+      description: "板材长度: mm"
+      xQuery: "number(/get/_P084/text())"
+      type: "int"
+
 
 - name: "P085"
   description: "板材宽度"
   requestFormat: "<get><var>.P085</var><auto>yes</auto></get>\n"
-  responseIf: ""
-  
+  responseIf: "count(/get/_P085) > 0"
+  items:
+    - name: "P085"
+      description: "板材宽度: mm"
+      xQuery: "number(/get/_P085/text())"
+      type: "int"
+
 
 - name: "P498"
   description: "板材厚度"
   requestFormat: "<get><var>.P[498]</var><auto>yes</auto></get>\n"
-  responseIf: ""
-  
+  responseIf: "count(/get/_P_498_) > 0"
+  items:
+    - name: "P498"
+      description: "板材厚度: 1到22对应1mm-22mm,23对应25mm"
+      xQuery: "number(/get/_P_498_/text())"
+      type: "int"
+
 
 - name: "P499"
   description: "板材材料"
   requestFormat: "<get><var>.P[499]</var><auto>yes</auto></get>\n"
-  responseIf: ""
-  
+  responseIf: "count(/get/_P_499_) > 0"
+  items:
+    - name: "P499"
+      description: "板材材料: 1：不锈钢，2：镜面钢，3：碳钢，4：acid-ms，5：镀锌钢，6：铝，7：镀钛钢"
+      xQuery: "number(/get/_P_499_/text())"
+      type: "int"
+
 
 - name: "P101"
   description: "切割速度"
   requestFormat: "<get><var>.P101</var><auto>yes</auto></get>\n"
-  responseIf: ""
-  
+  responseIf: "count(/get/_P101) > 0"
+  items:
+    - name: "P101"
+      description: "切割速度"
+      xQuery: "number(/get/_P101/text())"
+      type: "int"
+
 
 - name: "GAS_PRESSURE"
   description: "气压"
   requestFormat: "<get><var>.GAS_PRESSURE</var><auto>yes</auto></get>\n"
-  responseIf: ""
-  
+  responseIf: "count(/get/_GAS_PRESSURE) > 0"
+  items:
+    - name: "GAS_PRESSURE"
+      description: "气压"
+      xQuery: "number(/get/_GAS_PRESSURE/text())"
+      type: "int"
 

@@ -70,6 +70,15 @@ func (c *client) doLine(line string) (map[string]any, error) {
 		return nil, errors.New("empty line")
 	}
 
+	if strings.Contains(line, "<.") {
+		line = strings.ReplaceAll(line, "<.", "<_")
+		line = strings.ReplaceAll(line, "</.", "</_")
+
+		line = strings.ReplaceAll(line, "<_P[", "<_P_")
+		line = strings.ReplaceAll(line, "</_P[", "</_P_")
+		line = strings.ReplaceAll(line, "]>", "_>")
+	}
+
 	doc, err := xmlquery.Parse(strings.NewReader(line))
 	if err != nil {
 		return nil, err

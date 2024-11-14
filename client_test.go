@@ -86,8 +86,17 @@ func TestClient_ReadPLC(t *testing.T) {
 	assert.NoError(t, err1)
 }
 
-func doXmlEval(t *testing.T, nodeStr string, expStr string, expect any) {
-	doc, err := xmlquery.Parse(strings.NewReader(nodeStr))
+func doXmlEval(t *testing.T, line string, expStr string, expect any) {
+	if strings.Contains(line, "<.") {
+		line = strings.ReplaceAll(line, "<.", "<_")
+		line = strings.ReplaceAll(line, "</.", "</_")
+
+		line = strings.ReplaceAll(line, "<_P[", "<_P_")
+		line = strings.ReplaceAll(line, "</_P[", "</_P_")
+		line = strings.ReplaceAll(line, "]>", "_>")
+	}
+
+	doc, err := xmlquery.Parse(strings.NewReader(line))
 	assert.NoError(t, err)
 
 	navigator := xmlquery.CreateXPathNavigator(doc)
@@ -126,8 +135,11 @@ func TestClient_XPath(t *testing.T) {
 	doXmlEval(t, "<alarm><auto>yes</auto><no>821</no><prio>5</prio><st>nc1</st><v1>C:/PAData/NCProg\\1Flower.nc</v1><v2>C:/PAData/NCProg\\1Flower.nc</v2></alarm>", "count(/alarm) > 0 and number(/alarm/no/text()) > 0", true)
 	doXmlEval(t, "<alarm><auto>yes</auto><no>821</no><prio>5</prio><st>nc1</st><v1>C:/PAData/NCProg\\1Flower.nc</v1><v2>C:/PAData/NCProg\\1Flower.nc</v2></alarm>", "string-join(/alarm/*[starts-with(name(), 'v')]/text(), ';')", "C:/PAData/NCProg\\1Flower.nc;C:/PAData/NCProg\\1Flower.nc")
 
-	//doXmlEval(t, "<get><.P085>80</.P085><auto>yes</auto></get>", "count(/get) > 0", true)
-	//doXmlEval(t, "<get><.P085>80</.P085><auto>yes</auto></get>", "", "")
+	doXmlEval(t, "<get><.P085>80</.P085><auto>yes</auto></get>", "count(/get/_P085) > 0", true)
+	doXmlEval(t, "<get><.P085>80</.P085><auto>yes</auto></get>", "number(/get/_P085/text())", 80.0)
+
+	doXmlEval(t, "<get><.P[498]>1</.P[498]><auto>yes</auto></get>", "count(/get/_P_498_) > 0", true)
+	doXmlEval(t, "<get><.P[498]>1</.P[498]><auto>yes</auto></get>", "number(/get/_P_498_/text())", 1.0)
 }
 
 func TestClient_DoLine(t *testing.T) {
