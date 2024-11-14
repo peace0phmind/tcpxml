@@ -5,6 +5,7 @@ import (
 	"github.com/antchfx/xpath"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v3"
+	"math"
 	"os"
 	"strings"
 	"testing"
@@ -94,7 +95,15 @@ func doXmlEval(t *testing.T, nodeStr string, expStr string, expect any) {
 	assert.NoError(t, err)
 
 	ni := exp.Evaluate(navigator)
-	assert.Equal(t, expect, ni)
+	if fv, ok := expect.(float64); ok {
+		if math.IsNaN(fv) {
+			assert.True(t, math.IsNaN(ni.(float64)))
+		} else {
+			assert.Equal(t, fv, ni)
+		}
+	} else {
+		assert.Equal(t, expect, ni)
+	}
 }
 
 func TestClient_XPath(t *testing.T) {
@@ -106,9 +115,11 @@ func TestClient_XPath(t *testing.T) {
 
 	doXmlEval(t, "<axes><auto>yes</auto><ax1>+04483.533</ax1><ax2>+00000.000</ax2><ax3>+00024.000</ax3><ax4>+04413.335</ax4><ax5>+04413.335</ax5><ax6>+00103.128</ax6><ax7>+00111.000</ax7><sub>pos</sub></axes>", `count(/axes/sub[text() = "pos"]) > 0`, true)
 	doXmlEval(t, "<axes><auto>yes</auto><ax1>+04483.533</ax1><ax2>+00000.000</ax2><ax3>+00024.000</ax3><ax4>+04413.335</ax4><ax5>+04413.335</ax5><ax6>+00103.128</ax6><ax7>+00111.000</ax7><sub>pos</sub></axes>", "string(/axes/ax1/text())", "+04483.533")
+	doXmlEval(t, "<axes><auto>yes</auto><ax1>+04483.533</ax1><ax2>+00000.000</ax2><ax3>+00024.000</ax3><ax4>+04413.335</ax4><ax5>+04413.335</ax5><ax6>+00103.128</ax6><ax7>+00111.000</ax7><sub>pos</sub></axes>", "string(/axes/ax8/text())", "")
 
 	doXmlEval(t, "<axes><auto>yes</auto><ax1>0</ax1><ax2>0</ax2><ax3>0</ax3><ax4>14</ax4><ax5>14</ax5><ax6>0</ax6><ax7>0</ax7><sub>vel</sub></axes>", `count(/axes/sub[text() = "vel"]) > 0`, true)
 	doXmlEval(t, "<axes><auto>yes</auto><ax1>0</ax1><ax2>0</ax2><ax3>0</ax3><ax4>14</ax4><ax5>14</ax5><ax6>0</ax6><ax7>0</ax7><sub>vel</sub></axes>", "number(/axes/ax1/text())", 0.0)
+	doXmlEval(t, "<axes><auto>yes</auto><ax1>0</ax1><ax2>0</ax2><ax3>0</ax3><ax4>14</ax4><ax5>14</ax5><ax6>0</ax6><ax7>0</ax7><sub>vel</sub></axes>", "number(/axes/ax8/text())", math.NaN())
 
 	doXmlEval(t, "<alarm><auto>yes</auto><no>821</no><prio>5</prio><st>nc1</st><v1>C:/PAData/NCProg\\1Flower.nc</v1><v2>C:/PAData/NCProg\\1Flower.nc</v2></alarm>", "count(/alarm) > 0 and number(/alarm/no/text()) > 0", true)
 	doXmlEval(t, "<alarm><auto>yes</auto><no>821</no><prio>5</prio><st>nc1</st><v1>C:/PAData/NCProg\\1Flower.nc</v1><v2>C:/PAData/NCProg\\1Flower.nc</v2></alarm>", "string-join(/alarm/*[starts-with(name(), 'v')]/text(), ';')", "C:/PAData/NCProg\\1Flower.nc;C:/PAData/NCProg\\1Flower.nc")
