@@ -24,7 +24,7 @@ func NewClient(transporter Transporter, commands []XmlCommand) (Client, error) {
 	return c, nil
 }
 
-func (c *client) Read(cmdName string, params ...any) (any, error) {
+func (c *client) Read(cmdName string, params ...any) error {
 	if cmd, ok := c.cmdMap[cmdName]; ok {
 		request := cmd.RequestFormat
 		if len(params) > 0 {
@@ -33,17 +33,11 @@ func (c *client) Read(cmdName string, params ...any) (any, error) {
 
 		_, err := c.transporter.Write([]byte(request))
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		var buf [4096]byte
-		l, err := c.transporter.Read(buf[:])
-		if err != nil {
-			return nil, err
-		}
-
-		return string(buf[:l]), nil
+		return nil
 	} else {
-		return nil, fmt.Errorf("unknown command: %s", cmdName)
+		return fmt.Errorf("unknown command: %s", cmdName)
 	}
 }

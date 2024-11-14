@@ -1,0 +1,36 @@
+- name: "P084"
+  description: "板材长度"
+  requestFormat: "<get><var>.P084</var><auto>yes</auto></get>\n"
+  responseIf: ""
+  
+
+- name: "P085"
+  description: "板材宽度"
+  requestFormat: "<get><var>.P085</var><auto>yes</auto></get>\n"
+  responseIf: ""
+  
+
+- name: "P498"
+  description: "板材厚度"
+  requestFormat: "<get><var>.P[498]</var><auto>yes</auto></get>\n"
+  responseIf: ""
+  
+
+- name: "P499"
+  description: "板材材料"
+  requestFormat: "<get><var>.P[499]</var><auto>yes</auto></get>\n"
+  responseIf: ""
+  
+
+- name: "P101"
+  description: "切割速度"
+  requestFormat: "<get><var>.P101</var><auto>yes</auto></get>\n"
+  responseIf: ""
+  
+
+- name: "GAS_PRESSURE"
+  description: "气压"
+  requestFormat: "<get><var>.GAS_PRESSURE</var><auto>yes</auto></get>\n"
+  responseIf: ""
+  
+
