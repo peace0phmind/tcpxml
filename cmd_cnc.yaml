@@ -2,7 +2,7 @@
   description: "轴位置"
   requestFormat: "<axes><req>yes</req><auto>yes</auto><sub>pos</sub></axes>\n"
   responseIf: "count(/axes/sub[text() = 'pos']) > 0"
-  values:
+  items:
     - name: "pos_ax1"
       xQuery: "string(/axes/ax1/text())"
       type: "string"
@@ -30,7 +30,7 @@
   description: "轴速度"
   requestFormat: "<axes><req>yes</req><auto>yes</auto><sub>vel</sub></axes>\n"
   responseIf: "count(/axes/sub[text() = 'vel']) > 0"
-  values:
+  items:
     - name: "vel_ax1"
       xQuery: "number(/axes/ax1/text())"
       type: "int"
@@ -58,7 +58,7 @@
   description: "当前NC程序段"
   requestFormat: "<blocks><sub>basis</sub><auto>yes</auto></blocks>\n"
   responseIf: "count(/blocks/sub[text() = 'basis']) > 0"
-  values:
+  items:
     - name: "basis_act"
       xQuery: "string(/blocks/act/text())"
       type: "string"
@@ -74,7 +74,7 @@
   description: "当前NC程序路径"
   requestFormat: "<dir><sub>exe</sub></dir>\n"
   responseIf: "count(/dir/sub[text() = 'exe']) > 0"
-  values:
+  items:
     - name: "exe_name"
       xQuery: "string(/dir/name/text())"
       type: "string"
@@ -90,7 +90,7 @@
   description: "机床状态"
   requestFormat: "<ncda><var>status</var><auto>yes</auto></ncda>\n"
   responseIf: "count(/ncda/status) > 0"
-  values:
+  items:
     - name: "status"
       xQuery: "number(/ncda/status/text())"
       type: "int"
@@ -100,7 +100,7 @@
   description: "机床模式"
   requestFormat: "<ncda><var>mode,mmode,amode</var><auto>yes</auto></ncda>\n"
   responseIf: "count(/ncda/amode | mmode | mode) > 0"
-  values:
+  items:
     - name: "mode"
       xQuery: "number(/ncda/mode/text())"
       type: "int"
@@ -116,7 +116,7 @@
   description: "激光电压"
   requestFormat: "<laser><auto>yes</auto></laser>\n"
   responseIf: "count(/laser) > 0"
-  values:
+  items:
     - name: "laser_act1"
       xQuery: "number(/laser/act1/text())"
       type: "int"
@@ -141,7 +141,7 @@
   description: "报警信息"
   requestFormat: "<alarm><auto>yes</auto></alarm>\n"
   responseIf: "count(/alarm) > 0"
-  values:
+  items:
     - name: "alarm_no"
       xQuery: "number(/alarm/no/text())"
       type: "int"

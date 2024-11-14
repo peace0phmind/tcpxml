@@ -24,12 +24,12 @@ const (
 )
 
 const (
-	// TypeBool is a Type of type Bool.
-	TypeBool Type = iota
 	// TypeInt is a Type of type Int.
-	TypeInt
+	TypeInt Type = iota
 	// TypeUint is a Type of type Uint.
 	TypeUint
+	// TypeFloat is a Type of type Float.
+	TypeFloat
 	// TypeString is a Type of type String.
 	TypeString
 )
@@ -112,13 +112,13 @@ func (x *State) UnmarshalText(text []byte) error {
 
 var ErrInvalidType = errors.New("not a valid Type")
 
-var _TypeName = "BoolIntUintString"
+var _TypeName = "IntUintFloatString"
 
 var _TypeMapName = map[Type]string{
-	TypeBool:   _TypeName[0:4],
-	TypeInt:    _TypeName[4:7],
-	TypeUint:   _TypeName[7:11],
-	TypeString: _TypeName[11:17],
+	TypeInt:    _TypeName[0:3],
+	TypeUint:   _TypeName[3:7],
+	TypeFloat:  _TypeName[7:12],
+	TypeString: _TypeName[12:18],
 }
 
 // Name is the attribute of Type.
@@ -147,14 +147,14 @@ func (x Type) String() string {
 }
 
 var _TypeNameMap = map[string]Type{
-	_TypeName[0:4]:                    TypeBool,
-	strings.ToLower(_TypeName[0:4]):   TypeBool,
-	_TypeName[4:7]:                    TypeInt,
-	strings.ToLower(_TypeName[4:7]):   TypeInt,
-	_TypeName[7:11]:                   TypeUint,
-	strings.ToLower(_TypeName[7:11]):  TypeUint,
-	_TypeName[11:17]:                  TypeString,
-	strings.ToLower(_TypeName[11:17]): TypeString,
+	_TypeName[0:3]:                    TypeInt,
+	strings.ToLower(_TypeName[0:3]):   TypeInt,
+	_TypeName[3:7]:                    TypeUint,
+	strings.ToLower(_TypeName[3:7]):   TypeUint,
+	_TypeName[7:12]:                   TypeFloat,
+	strings.ToLower(_TypeName[7:12]):  TypeFloat,
+	_TypeName[12:18]:                  TypeString,
+	strings.ToLower(_TypeName[12:18]): TypeString,
 }
 
 // ParseType converts a string to a Type.

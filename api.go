@@ -1,32 +1,37 @@
 package tcpxml
 
+import "github.com/antchfx/xpath"
+
 /*
 Type
 
 	@EnumConfig(marshal)
 	@Enum {
-		Bool
 		Int
 		Uint
+		Float
 		String
 	}
 */
 type Type int
 
-type XmlValue struct {
-	Name   string `yaml:"name"`
-	XQuery string `yaml:"xQuery"`
-	Type   Type   `yaml:"type"`
+type XmlCommand struct {
+	Name           string `yaml:"name"`
+	Description    string `yaml:"description"`
+	RequestFormat  string `yaml:"requestFormat"`
+	ResponseIf     string `yaml:"responseIf"`
+	ResponseIfExpr *xpath.Expr
+	Items          []*XmlItem `yaml:"items"`
 }
 
-type XmlCommand struct {
-	Name          string     `yaml:"name"`
-	Description   string     `yaml:"description"`
-	RequestFormat string     `yaml:"requestFormat"`
-	ResponseIf    string     `yaml:"responseIf"`
-	Values        []XmlValue `yaml:"values"`
+type XmlItem struct {
+	Name       string `yaml:"name"`
+	XQuery     string `yaml:"xQuery"`
+	XQueryExpr *xpath.Expr
+	Type       Type `yaml:"type"`
 }
 
 type Client interface {
 	Read(name string, params ...any) error
+	doLine(line string) (map[string]any, error)
 }
