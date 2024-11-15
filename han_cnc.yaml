@@ -108,7 +108,7 @@
   responseIf: "count(/ncda/status) > 0"
   items:
     - name: "status"
-      description: "1、2、3:急停;4:停止(cycle stop);5:准备(cycle off);6:运行(cycle on)"
+      description: "机床状态(1,2,3:急停;4:停止;5:准备;6:运行)"
       xQuery: "number(/ncda/status/text())"
       type: "int"
 
@@ -119,15 +119,15 @@
   responseIf: "count(/ncda/amode | mmode | mode) > 0"
   items:
     - name: "mode"
-      description: "mode:0(自动模式),1(单段模式),2(MDI),3(手动模式),4(内存模式),5(回原点模式),255(模式未选择)"
+      description: "mode(0:自动模式;1:单段模式;2:MDI;3:手动模式;4:内存模式;5:回原点模式;255:模式未选择)"
       xQuery: "number(/ncda/mode/text())"
       type: "int"
     - name: "amode"
-      description: "amode:0(连续模式),1(单段模式),2(MDI)"
+      description: "amode(0:连续模式;1:单段模式;2:MDI)"
       xQuery: "number(/ncda/amode/text())"
       type: "int"
     - name: "mmode"
-      description: "mmode:1(手动连续模式),2(手动增量模式),3(手轮模式)"
+      description: "mmode(1:手动连续模式;2:手动增量模式;3:手轮模式)"
       xQuery: "number(/ncda/mmode/text())"
       type: "int"
 
@@ -177,11 +177,11 @@
       xQuery: "number(/alarm/prio/text())"
       type: "int"
     - name: "alarm_st"
-      description: "通道（nc1、nc2...表示CNC，plc表示PLC）"
+      description: "通道(nc1、nc2...:表示CNC;plc:表示PLC)"
       xQuery: "string(/alarm/st/text())"
       type: "string"
     - name: "alarm_value"
-      description: "报警参数,多个参数用;隔开"
+      description: "报警参数(多个参数用;隔开)"
       xQuery: "string-join(/alarm/*[starts-with(name(), 'v')]/text(), ';')"
       type: "string"
 

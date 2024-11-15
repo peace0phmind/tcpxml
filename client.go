@@ -47,7 +47,7 @@ func NewClient(transporter Transporter, commands []XmlCommand) (Client, error) {
 	return c, nil
 }
 
-func (c *client) Read(cmdName string, params ...any) error {
+func (c *client) Subscribe(cmdName string, params ...any) error {
 	if cmd, ok := c.cmdMap[cmdName]; ok {
 		request := cmd.RequestFormat
 		if len(params) > 0 {
@@ -91,6 +91,7 @@ func (c *client) doLine(line string) (map[string]any, error) {
 		if bv, ok := ev.(bool); ok {
 			if bv {
 				var ret = make(map[string]any)
+
 				for _, item := range cmd.Items {
 					v := item.XQueryExpr.Evaluate(nav)
 					switch item.Type {
