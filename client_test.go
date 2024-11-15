@@ -32,7 +32,7 @@ func TestClient_ReadCNC(t *testing.T) {
 	defer transporter.Close()
 
 	for _, cmd := range commands {
-		err1 := cc.Read(cmd.Name)
+		err1 := cc.Subscribe(cmd.Name)
 		assert.NoError(t, err1)
 	}
 
@@ -82,7 +82,7 @@ func TestClient_ReadPLC(t *testing.T) {
 	//	time.Sleep(2 * time.Second)
 	//}
 
-	err1 := cc.Read("INI_GAS")
+	err1 := cc.Subscribe("INI_GAS")
 	assert.NoError(t, err1)
 }
 
