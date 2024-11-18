@@ -34,5 +34,5 @@ type XmlItem struct {
 
 type Client interface {
 	Read(name string, params ...any) (map[string]any, error)
-	doLine(cmd XmlCommand, line string) (map[string]any, error)
+	parseLine(cmd XmlCommand, line string) (map[string]any, error)
 }

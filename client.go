@@ -65,13 +65,13 @@ func (c *client) Read(cmdName string, params ...any) (map[string]any, error) {
 			return nil, err
 		}
 
-		return c.doLine(cmd, string(buf[:l]))
+		return c.parseLine(cmd, string(buf[:l]))
 	} else {
 		return nil, fmt.Errorf("unknown command: %s", cmdName)
 	}
 }
 
-func (c *client) doLine(cmd XmlCommand, line string) (map[string]any, error) {
+func (c *client) parseLine(cmd XmlCommand, line string) (map[string]any, error) {
 	if len(line) == 0 {
 		return nil, errors.New("empty line")
 	}

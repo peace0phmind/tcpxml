@@ -144,7 +144,7 @@ func TestClient_XPath(t *testing.T) {
 //	Lines := strings.Split(lines, "\n")
 //
 //	for i, line := range Lines {
-//		values, err1 := cc.doLine(line)
+//		values, err1 := cc.parseLine(line)
 //		assert.NoError(t, err1)
 //		fmt.Printf("%d: %+v\n", i, values)
 //	}
