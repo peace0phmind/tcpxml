@@ -5,7 +5,9 @@ import (
 	"strings"
 )
 
-func NewCommandsFromYaml(yamlName string) ([]XmlCommand, error) {
+type Commands []XmlCommand
+
+func NewCommandsFromYaml(yamlName string) (Commands, error) {
 	yamlName = strings.ToLower(yamlName) + ".yaml"
 
 	buf, err := yamlFiles.ReadFile(yamlName)
@@ -20,4 +22,16 @@ func NewCommandsFromYaml(yamlName string) ([]XmlCommand, error) {
 	}
 
 	return commands, nil
+}
+
+func (cmds Commands) FindItemByName(itemName string) *XmlItem {
+	for _, cmd := range cmds {
+		for _, item := range cmd.Items {
+			if strings.EqualFold(item.Name, itemName) {
+				return item
+			}
+		}
+	}
+
+	return nil
 }
