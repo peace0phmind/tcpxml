@@ -129,6 +129,6 @@ func (c *client) parseLine(cmd XmlCommand, line string) (map[string]any, error) 
 		}
 	}
 
-	c.L.Infof("count't parse line: %s", line)
+	c.L.Infof("couldn't parse line: %s", line)
 	return nil, nil
 }
