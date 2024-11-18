@@ -54,6 +54,8 @@ func (c *client) Read(cmdName string, params ...any) (map[string]any, error) {
 			request = fmt.Sprintf(cmd.RequestFormat, params...)
 		}
 
+		c.L.Debugf("Request: %s", request)
+
 		_, err := c.transporter.Write([]byte(request))
 		if err != nil {
 			return nil, err
@@ -65,7 +67,11 @@ func (c *client) Read(cmdName string, params ...any) (map[string]any, error) {
 			return nil, err
 		}
 
-		return c.parseLine(cmd, string(buf[:l]))
+		response := string(buf[:l])
+
+		c.L.Debugf("Response: %s", response)
+
+		return c.parseLine(cmd, response)
 	} else {
 		return nil, fmt.Errorf("unknown command: %s", cmdName)
 	}
@@ -114,11 +120,8 @@ func (c *client) parseLine(cmd XmlCommand, line string) (map[string]any, error) 
 							panic("unhandled default case")
 						}
 					}
-				case TypeString:
-					sv := v.(string)
-					if len(sv) > 0 {
-						ret[item.Name] = sv
-					}
+				default:
+					ret[item.Name] = v
 				}
 			}
 
