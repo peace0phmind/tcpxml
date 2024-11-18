@@ -4,21 +4,13 @@ import (
 	"github.com/antchfx/xmlquery"
 	"github.com/antchfx/xpath"
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/yaml.v3"
 	"math"
-	"os"
 	"strings"
 	"testing"
 )
 
 func TestClient_ReadCNC(t *testing.T) {
-	data, err := os.ReadFile("han_cnc.yaml")
-	if err != nil {
-		panic(err)
-	}
-
-	var commands []XmlCommand
-	err = yaml.Unmarshal(data, &commands)
+	commands, err := NewCommandsFromYaml("han_cnc")
 	if err != nil {
 		panic(err)
 	}
@@ -53,13 +45,7 @@ func TestClient_ReadCNC(t *testing.T) {
 }
 
 func TestClient_ReadPLC(t *testing.T) {
-	data, err := os.ReadFile("han_plc.yaml")
-	if err != nil {
-		panic(err)
-	}
-
-	var commands []XmlCommand
-	err = yaml.Unmarshal(data, &commands)
+	commands, err := NewCommandsFromYaml("han_plc")
 	if err != nil {
 		panic(err)
 	}
