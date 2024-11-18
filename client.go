@@ -47,7 +47,7 @@ func NewClient(transporter Transporter, commands []XmlCommand) (Client, error) {
 	return c, nil
 }
 
-func (c *client) Subscribe(cmdName string, params ...any) error {
+func (c *client) Read(cmdName string, params ...any) (map[string]any, error) {
 	if cmd, ok := c.cmdMap[cmdName]; ok {
 		request := cmd.RequestFormat
 		if len(params) > 0 {
@@ -56,16 +56,22 @@ func (c *client) Subscribe(cmdName string, params ...any) error {
 
 		_, err := c.transporter.Write([]byte(request))
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		return nil
+		var buf [4096]byte
+		l, err := c.transporter.Read(buf[:])
+		if err != nil {
+			return nil, err
+		}
+
+		return c.doLine(cmd, string(buf[:l]))
 	} else {
-		return fmt.Errorf("unknown command: %s", cmdName)
+		return nil, fmt.Errorf("unknown command: %s", cmdName)
 	}
 }
 
-func (c *client) doLine(line string) (map[string]any, error) {
+func (c *client) doLine(cmd XmlCommand, line string) (map[string]any, error) {
 	if len(line) == 0 {
 		return nil, errors.New("empty line")
 	}
@@ -86,30 +92,28 @@ func (c *client) doLine(line string) (map[string]any, error) {
 
 	nav := xmlquery.CreateXPathNavigator(doc)
 
-	for _, cmd := range c.cmdMap {
-		ev := cmd.ResponseIfExpr.Evaluate(nav)
-		if bv, ok := ev.(bool); ok {
-			if bv {
-				var ret = make(map[string]any)
+	ev := cmd.ResponseIfExpr.Evaluate(nav)
+	if bv, ok := ev.(bool); ok {
+		if bv {
+			var ret = make(map[string]any)
 
-				for _, item := range cmd.Items {
-					v := item.XQueryExpr.Evaluate(nav)
-					switch item.Type {
-					case TypeInt, TypeUint, TypeFloat:
-						fv := v.(float64)
-						if !math.IsNaN(fv) {
-							ret[item.Name] = fv
-						}
-					case TypeString:
-						sv := v.(string)
-						if len(sv) > 0 {
-							ret[item.Name] = sv
-						}
+			for _, item := range cmd.Items {
+				v := item.XQueryExpr.Evaluate(nav)
+				switch item.Type {
+				case TypeInt, TypeUint, TypeFloat:
+					fv := v.(float64)
+					if !math.IsNaN(fv) {
+						ret[item.Name] = fv
+					}
+				case TypeString:
+					sv := v.(string)
+					if len(sv) > 0 {
+						ret[item.Name] = sv
 					}
 				}
-
-				return ret, nil
 			}
+
+			return ret, nil
 		}
 	}
 

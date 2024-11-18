@@ -1,22 +1,15 @@
 package tcpxml
 
 import (
-	"bytes"
-	"context"
 	"errors"
 	"github.com/expgo/factory"
-	"github.com/expgo/serve"
-	"github.com/thejerf/suture/v4"
 	"net"
 	"time"
 )
 
 type TcpTransporter struct {
 	baseTransporter
-	conn    net.Conn
-	buf     bytes.Buffer
-	lines   chan string
-	serveId suture.ServiceToken
+	conn net.Conn
 }
 
 func NewTcpTransport(addr string) *TcpTransporter {
@@ -24,14 +17,10 @@ func NewTcpTransport(addr string) *TcpTransporter {
 		ret.baseTransporter.addr = addr
 	})
 
-	ret.serveId = serve.AddServe("tcpxml-tcp", ret)
-	ret.lines = make(chan string, 10000)
-	_ = ret.open()
-
 	return ret
 }
 
-func (t *TcpTransporter) open() (err error) {
+func (t *TcpTransporter) Open() (err error) {
 	if !t.running.CompareAndSwap(false, true) {
 		return nil
 	}
@@ -65,8 +54,6 @@ func (t *TcpTransporter) Close() (err error) {
 	if t.conn == nil {
 		return nil
 	}
-
-	_ = serve.RemoveAndWait(t.serveId, 300*time.Millisecond)
 
 	return t.conn.Close()
 }
@@ -107,53 +94,4 @@ func (t *TcpTransporter) Read(buf []byte) (n int, err error) {
 	}
 
 	return t.conn.Read(buf)
-}
-
-func (t *TcpTransporter) Serve(ctx context.Context) error {
-	if err := t.open(); err != nil {
-		return err
-	}
-
-	for {
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		default:
-			if t.state != StateConnected {
-				time.Sleep(100 * time.Millisecond)
-				continue
-			}
-
-			if err := t.conn.SetReadDeadline(time.Now().Add(t.ReadTimeout)); err != nil {
-				return err
-			}
-			var buf [4096]byte
-			l, err := t.conn.Read(buf[:])
-			if err != nil {
-				if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
-					// fmt.Println("Read timeout")
-				} else {
-					return err
-				}
-			}
-
-			_, err = t.buf.Write(buf[:l])
-			if err != nil {
-				return err
-			}
-
-			for {
-				line, err1 := t.buf.ReadString('\n')
-				if err1 != nil {
-					t.L.Warnf("%+v", err1)
-					break
-				}
-				t.lines <- line
-			}
-		}
-	}
-}
-
-func (t *TcpTransporter) Lines() <-chan string {
-	return t.lines
 }

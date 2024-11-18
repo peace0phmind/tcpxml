@@ -1,6 +1,6 @@
 - name: "pos"
   description: "轴位置"
-  requestFormat: "<axes><req>yes</req><sub>pos</sub></axes>\n"
+  requestFormat: "<axes><req>yes</req><auto>yes</auto><sub>pos</sub></axes>\n"
   responseIf: "count(/axes/sub[text() = 'pos']) > 0"
   items:
     - name: "pos_ax1"
@@ -35,7 +35,7 @@
 
 - name: "vel"
   description: "轴速度"
-  requestFormat: "<axes><req>yes</req><sub>vel</sub></axes>\n"
+  requestFormat: "<axes><req>yes</req><auto>yes</auto><sub>vel</sub></axes>\n"
   responseIf: "count(/axes/sub[text() = 'vel']) > 0"
   items:
     - name: "vel_ax1"
@@ -70,7 +70,7 @@
 
 - name: "basis"
   description: "当前NC程序段"
-  requestFormat: "<blocks><sub>basis</sub></blocks>\n"
+  requestFormat: "<blocks><sub>basis</sub><auto>yes</auto></blocks>\n"
   responseIf: "count(/blocks/sub[text() = 'basis']) > 0"
   items:
     - name: "basis_act"
@@ -104,7 +104,7 @@
 
 - name: "status"
   description: "机床状态"
-  requestFormat: "<ncda><var>status</var></ncda>\n"
+  requestFormat: "<ncda><var>status</var><auto>yes</auto></ncda>\n"
   responseIf: "count(/ncda/status) > 0"
   items:
     - name: "status"
@@ -115,7 +115,7 @@
 
 - name: "mode"
   description: "机床模式"
-  requestFormat: "<ncda><var>mode,mmode,amode</var></ncda>\n"
+  requestFormat: "<ncda><var>mode,mmode,amode</var><auto>yes</auto></ncda>\n"
   responseIf: "count(/ncda/amode | mmode | mode) > 0"
   items:
     - name: "mode"
@@ -134,7 +134,7 @@
 
 - name: "laser"
   description: "激光电压"
-  requestFormat: "<laser></laser>\n"
+  requestFormat: "<laser><auto>yes</auto></laser>\n"
   responseIf: "count(/laser) > 0"
   items:
     - name: "laser_act1"
@@ -165,7 +165,7 @@
 
 - name: "alarm"
   description: "报警信息"
-  requestFormat: "<alarm></alarm>\n"
+  requestFormat: "<alarm><auto>yes</auto></alarm>\n"
   responseIf: "count(/alarm) > 0 and number(/alarm/no/text()) > 0"
   items:
     - name: "alarm_no"

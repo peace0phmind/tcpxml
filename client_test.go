@@ -1,7 +1,6 @@
 package tcpxml
 
 import (
-	"fmt"
 	"github.com/antchfx/xmlquery"
 	"github.com/antchfx/xpath"
 	"github.com/stretchr/testify/assert"
@@ -29,16 +28,13 @@ func TestClient_ReadCNC(t *testing.T) {
 	cc, err := NewClient(transporter, commands)
 	assert.NoError(t, err)
 
+	_ = transporter.Open()
 	defer transporter.Close()
 
 	for _, cmd := range commands {
-		err1 := cc.Subscribe(cmd.Name)
+		m, err1 := cc.Read(cmd.Name)
 		assert.NoError(t, err1)
-	}
-
-	for i := 0; i < 2000; i++ {
-		line := <-transporter.Lines()
-		t.Logf("%s", line)
+		t.Logf("%+v", m)
 	}
 
 	//v, err1 := cc.Read("pos")
@@ -73,17 +69,17 @@ func TestClient_ReadPLC(t *testing.T) {
 	cc, err := NewClient(transporter, commands)
 	assert.NoError(t, err)
 
+	_ = transporter.Open()
 	defer transporter.Close()
 
-	//for _, cmd := range commands {
-	//	v, err1 := cc.Read(cmd.Name)
-	//	assert.NoError(t, err1)
-	//	t.Logf("%+v", v)
-	//	time.Sleep(2 * time.Second)
-	//}
+	for _, cmd := range commands {
+		v, err1 := cc.Read(cmd.Name)
+		assert.NoError(t, err1)
+		t.Logf("%+v", v)
+	}
 
-	err1 := cc.Subscribe("INI_GAS")
-	assert.NoError(t, err1)
+	//err1 := cc.Subscribe("INI_GAS")
+	//assert.NoError(t, err1)
 }
 
 func doXmlEval(t *testing.T, line string, expStr string, expect any) {
@@ -142,31 +138,31 @@ func TestClient_XPath(t *testing.T) {
 	doXmlEval(t, "<get><.P[498]>1</.P[498]><auto>yes</auto></get>", "number(/get/_P_498_/text())", 1.0)
 }
 
-func TestClient_DoLine(t *testing.T) {
-	data, err := os.ReadFile("han_cnc.yaml")
-	if err != nil {
-		panic(err)
-	}
-
-	var commands []XmlCommand
-	err = yaml.Unmarshal(data, &commands)
-	if err != nil {
-		panic(err)
-	}
-
-	transporter := NewTcpTransport("127.0.0.1:62937")
-
-	cc, err := NewClient(transporter, commands)
-	assert.NoError(t, err)
-
-	Lines := strings.Split(lines, "\n")
-
-	for i, line := range Lines {
-		values, err1 := cc.doLine(line)
-		assert.NoError(t, err1)
-		fmt.Printf("%d: %+v\n", i, values)
-	}
-}
+//func TestClient_DoLine(t *testing.T) {
+//	data, err := os.ReadFile("han_cnc.yaml")
+//	if err != nil {
+//		panic(err)
+//	}
+//
+//	var commands []XmlCommand
+//	err = yaml.Unmarshal(data, &commands)
+//	if err != nil {
+//		panic(err)
+//	}
+//
+//	transporter := NewTcpTransport("127.0.0.1:62937")
+//
+//	cc, err := NewClient(transporter, commands)
+//	assert.NoError(t, err)
+//
+//	Lines := strings.Split(lines, "\n")
+//
+//	for i, line := range Lines {
+//		values, err1 := cc.doLine(line)
+//		assert.NoError(t, err1)
+//		fmt.Printf("%d: %+v\n", i, values)
+//	}
+//}
 
 const lines = `<ncda><amode>0</amode><auto>yes</auto><mmode>0</mmode><mode>0</mode></ncda>
 <alarm><auto>yes</auto></alarm>

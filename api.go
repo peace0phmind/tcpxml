@@ -33,6 +33,6 @@ type XmlItem struct {
 }
 
 type Client interface {
-	Subscribe(name string, params ...any) error
-	doLine(line string) (map[string]any, error)
+	Read(name string, params ...any) (map[string]any, error)
+	doLine(cmd XmlCommand, line string) (map[string]any, error)
 }

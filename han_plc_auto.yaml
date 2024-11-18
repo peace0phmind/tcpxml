@@ -1,6 +1,6 @@
 - name: "P084"
   description: "板材长度"
-  requestFormat: "<get><var>.P084</var></get>\n"
+  requestFormat: "<get><var>.P084</var><auto>yes</auto></get>\n"
   responseIf: "count(/get/_P084) > 0"
   items:
     - name: "P084"
@@ -11,7 +11,7 @@
 
 - name: "P085"
   description: "板材宽度"
-  requestFormat: "<get><var>.P085</var></get>\n"
+  requestFormat: "<get><var>.P085</var><auto>yes</auto></get>\n"
   responseIf: "count(/get/_P085) > 0"
   items:
     - name: "P085"
@@ -22,7 +22,7 @@
 
 - name: "P498"
   description: "板材厚度"
-  requestFormat: "<get><var>.P[498]</var></get>\n"
+  requestFormat: "<get><var>.P[498]</var><auto>yes</auto></get>\n"
   responseIf: "count(/get/_P_498_) > 0"
   items:
     - name: "P498"
@@ -33,7 +33,7 @@
 
 - name: "P499"
   description: "板材材料"
-  requestFormat: "<get><var>.P[499]</var></get>\n"
+  requestFormat: "<get><var>.P[499]</var><auto>yes</auto></get>\n"
   responseIf: "count(/get/_P_499_) > 0"
   items:
     - name: "P499"
@@ -44,7 +44,7 @@
 
 - name: "P101"
   description: "切割速度"
-  requestFormat: "<get><var>.P101</var></get>\n"
+  requestFormat: "<get><var>.P101</var><auto>yes</auto></get>\n"
   responseIf: "count(/get/_P101) > 0"
   items:
     - name: "P101"
@@ -55,7 +55,7 @@
 
 - name: "GAS_PRESSURE"
   description: "气压"
-  requestFormat: "<get><var>.GAS_PRESSURE</var></get>\n"
+  requestFormat: "<get><var>.GAS_PRESSURE</var><auto>yes</auto></get>\n"
   responseIf: "count(/get/_GAS_PRESSURE) > 0"
   items:
     - name: "GAS_PRESSURE"

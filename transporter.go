@@ -22,7 +22,7 @@ State
 type State int
 
 type Transporter interface {
-	open() error
+	Open() error
 	Close() error
 	Write(data []byte) (int, error)
 	Read(buf []byte) (int, error)
@@ -108,5 +108,5 @@ func (t *baseTransporter) reconnect() {
 	}
 
 	_ = t.self.Close()
-	_ = t.self.open()
+	_ = t.self.Open()
 }
