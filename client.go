@@ -103,7 +103,16 @@ func (c *client) parseLine(cmd XmlCommand, line string) (map[string]any, error) 
 				case TypeInt, TypeUint, TypeFloat:
 					fv := v.(float64)
 					if !math.IsNaN(fv) {
-						ret[item.Name] = fv
+						switch item.Type {
+						case TypeInt:
+							ret[item.Name] = int32(fv)
+						case TypeUint:
+							ret[item.Name] = uint32(fv)
+						case TypeFloat:
+							ret[item.Name] = float32(fv)
+						default:
+							panic("unhandled default case")
+						}
 					}
 				case TypeString:
 					sv := v.(string)
