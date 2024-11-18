@@ -30,14 +30,14 @@ func NewClient(transporter Transporter, commands []XmlCommand) (Client, error) {
 			if err != nil {
 				return nil, fmt.Errorf("cmd %s parse expr err: %v", cmd.Name, err)
 			}
-			cmd.ResponseIfExpr = ifExpr
+			cmd.responseIfExpr = ifExpr
 
 			for _, item := range cmd.Items {
 				expr, err1 := xpath.Compile(item.XQuery)
 				if err1 != nil {
 					return nil, fmt.Errorf("cmd %s value %s parse expr err: %v", cmd.Name, item.Name, err1)
 				}
-				item.XQueryExpr = expr
+				item.xQueryExpr = expr
 			}
 
 			c.cmdMap[cmd.Name] = cmd
@@ -92,13 +92,13 @@ func (c *client) parseLine(cmd XmlCommand, line string) (map[string]any, error) 
 
 	nav := xmlquery.CreateXPathNavigator(doc)
 
-	ev := cmd.ResponseIfExpr.Evaluate(nav)
+	ev := cmd.responseIfExpr.Evaluate(nav)
 	if bv, ok := ev.(bool); ok {
 		if bv {
 			var ret = make(map[string]any)
 
 			for _, item := range cmd.Items {
-				v := item.XQueryExpr.Evaluate(nav)
+				v := item.xQueryExpr.Evaluate(nav)
 				switch item.Type {
 				case TypeInt, TypeUint, TypeFloat:
 					fv := v.(float64)
